@@ -51,11 +51,11 @@ class PhysicsSim():
 
         self.reset()
 
-    def reset(self):
+    def reset(self, positionNoise=0, velocityNoise=0, angleNoise=0, angleRateNoise=0):
         self.time = 0.0
-        self.pose = np.array([0.0, 0.0, 10.0, 0.0, 0.0, 0.0]) if self.init_pose is None else np.copy(self.init_pose)
-        self.v = np.array([0.0, 0.0, 0.0]) if self.init_velocities is None else np.copy(self.init_velocities)
-        self.angular_v = np.array([0.0, 0.0, 0.0]) if self.init_angle_velocities is None else np.copy(self.init_angle_velocities)
+        self.pose = np.array([0.0, 0.0, 10.0, 0.0, 0.0, 0.0]) if self.init_pose is None else np.copy(self.init_pose + np.concatenate((((np.random.rand(3)-0.5)*positionNoise),((np.random.rand(3)-0.5)*(angleNoise/180*np.pi)))))
+        self.v = np.array([0.0, 0.0, 0.0]) if self.init_velocities is None else np.copy(self.init_velocities + ((np.random.rand(3)-0.5)*velocityNoise))
+        self.angular_v = np.array([0.0, 0.0, 0.0]) if self.init_angle_velocities is None else np.copy(self.init_angle_velocities + ((np.random.rand(3)-0.5)*(angleRateNoise/180*np.pi)))
         self.linear_accel = np.array([0.0, 0.0, 0.0])
         self.angular_accels = np.array([0.0, 0.0, 0.0])
         self.prop_wind_speed = np.array([0., 0., 0., 0.])
